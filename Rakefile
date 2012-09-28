@@ -1,16 +1,13 @@
 require "fileutils"
 require "tmpdir"
-require 'hatchet/tasks'
-
-S3_BUCKET_NAME  = "heroku-buildpack-ruby"
-VENDOR_URL      = "https://s3.amazonaws.com/#{S3_BUCKET_NAME}"
+require_relative "configs"
 
 def s3_tools_dir
   File.expand_path("../support/s3", __FILE__)
 end
 
 def s3_upload(tmpdir, name)
-  sh("#{s3_tools_dir}/s3 put #{S3_BUCKET_NAME} #{name}.tgz #{tmpdir}/#{name}.tgz")
+  sh("#{s3_tools_dir}/s3 put #{Configs::S3_BUCKET_NAME} #{name}.tgz #{tmpdir}/#{name}.tgz")
 end
 
 def vendor_plugin(git_url, branch = nil)
@@ -168,8 +165,8 @@ task "ruby:install", :version do |t, args|
       sh "curl http://ftp.ruby-lang.org/pub/ruby/#{major_ruby}/#{full_name}.tar.gz -s -o - | tar zxf -"
       FileUtils.mkdir_p("#{full_name}/#{usr_dir}")
       Dir.chdir("#{full_name}/#{usr_dir}") do
-        sh "curl #{VENDOR_URL}/libyaml-0.1.4.tgz -s -o - | tar zxf -"
-        sh "curl #{VENDOR_URL}/libffi-3.0.10.tgz -s -o - | tar zxf -"
+        sh "curl #{Configs::VENDOR_URL}/libyaml-0.1.4.tgz -s -o - | tar zxf -"
+        sh "curl #{Configs::VENDOR_URL}/libffi-3.0.10.tgz -s -o - | tar zxf -"
         sh "curl http://production.cf.rubygems.org/rubygems/rubygems-#{rubygems}.tgz -s -o - | tar xzf -" if major_ruby == "1.8"
       end
 
@@ -226,8 +223,8 @@ task "rbx2dev:install", :version, :ruby_version do |t, args|
       sh "curl http://asset.rubini.us/#{source}.tar.gz -s -o - | tar vzxf -"
       FileUtils.mkdir_p("#{name}/#{usr_dir}")
       Dir.chdir("#{name}/#{usr_dir}") do
-        sh "curl #{VENDOR_URL}/libyaml-0.1.4.tgz -s -o - | tar vzxf -"
-        sh "curl #{VENDOR_URL}/libffi-3.0.10.tgz -s -o - | tar vzxf -"
+        sh "curl #{Configs::VENDOR_URL}/libyaml-0.1.4.tgz -s -o - | tar vzxf -"
+        sh "curl #{Configs::VENDOR_URL}/libffi-3.0.10.tgz -s -o - | tar vzxf -"
       end
 
       prefix = "/app/vendor/#{output}"
@@ -259,7 +256,7 @@ task "jruby:install", :version, :ruby_version do |t, args|
         sh "rm -rf manual"
       end
       Dir.chdir("#{src_folder}/bin") do
-        sh "curl #{VENDOR_URL}/jruby-launcher-1.0.12-java.tgz -s -o - | tar vzxf -"
+        sh "curl #{Configs::VENDOR_URL}/jruby-launcher-1.0.12-java.tgz -s -o - | tar vzxf -"
       end
 
       major, minor, patch = ruby_version.split('.')
@@ -311,13 +308,13 @@ task "ruby:manifest" do
   require 'rexml/document'
   require 'yaml'
 
-  document = REXML::Document.new(`curl https://#{S3_BUCKET_NAME}.s3.amazonaws.com`)
+  document = REXML::Document.new(`curl https://#{Configs::S3_BUCKET_NAME}.s3.amazonaws.com`)
   rubies   = document.elements.to_a("//Contents/Key").map {|node| node.text }.select {|text| text.match(/^(ruby|rbx|jruby)-\\\\d+\\\\.\\\\d+\\\\.\\\\d+(-p\\\\d+)?/) }
 
   Dir.mktmpdir("ruby_versions-") do |tmpdir|
     name = 'ruby_versions.yml'
     File.open(name, 'w') {|file| file.puts(rubies.to_yaml) }
-    sh("#{s3_tools_dir}/s3 put #{S3_BUCKET_NAME} #{name} #{name}")
+    sh("#{s3_tools_dir}/s3 put #{Configs::S3_BUCKET_NAME} #{name} #{name}")
   end
 end
 

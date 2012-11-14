@@ -628,10 +628,10 @@ ERROR
 
       full_ruby_version       = run_stdout(%q(ruby -v)).chomp
       rubygems_version        = run_stdout(%q(gem -v)).chomp
-      heroku_metadata         = "vendor/heroku"
+      paas_vendor_metadata    = "vendor/paas_vendor"
       old_rubygems_version    = nil
-      ruby_version_cache      = "ruby_version"
-      buildpack_version_cache = "buildpack_version"
+      ruby_version_cache      = "#{paas_vendor_metadata}/ruby_version"
+      buildpack_version_cache = "#{paas_vendor_metadata}/buildpack_version"
       bundler_version_cache   = "bundler_version"
       rubygems_version_cache  = "rubygems_version"
 
@@ -669,8 +669,7 @@ ERROR
       end
 
       purge_bundler_cache if @metadata.exists?(buildpack_version_cache) && @metadata.read(buildpack_version_cache).sub('v', '').to_i <= 76
-
-      FileUtils.mkdir_p(heroku_metadata)
+      FileUtils.mkdir_p(paas_vendor_metadata)
       @metadata.write(ruby_version_cache, full_ruby_version, false)
       @metadata.write(buildpack_version_cache, BUILDPACK_VERSION, false)
       @metadata.write(bundler_version_cache, BUNDLER_VERSION, false)

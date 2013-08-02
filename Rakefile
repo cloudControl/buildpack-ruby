@@ -1,5 +1,6 @@
 require "fileutils"
 require "tmpdir"
+require 'hatchet/tasks'
 require_relative "configs"
 
 def s3_tools_dir

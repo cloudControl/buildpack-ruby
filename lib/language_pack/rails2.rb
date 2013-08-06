@@ -87,12 +87,6 @@ private
     end
   end
 
-  # most rails apps need a database
-  # @return [Array] shared database addon
-  def heroku_add_shared_database_addon
-    ['shared-database:5mb']
-  end
-
   # sets up the profile.d script for this buildpack
   def setup_profiled
     super

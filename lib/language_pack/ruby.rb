@@ -4,6 +4,7 @@ require "rubygems"
 require "language_pack"
 require "language_pack/base"
 require "language_pack/bundler_lockfile"
+require "language_pack/metadata"
 require_relative "../../configs"
 
 # base Ruby Language Pack. This is for any base ruby app.
@@ -343,7 +344,7 @@ WARNING
   end
 
   def new_app?
-    !File.exist?("vendor/heroku")
+    !File.exist?(LanguagePack::Metadata::FOLDER)
   end
 
   # vendors JVM into the slug for JRuby
@@ -631,7 +632,7 @@ ERROR
 
       full_ruby_version       = run_stdout(%q(ruby -v)).chomp
       rubygems_version        = run_stdout(%q(gem -v)).chomp
-      paas_vendor_metadata    = "vendor/heroku"
+      paas_vendor_metadata    = LanguagePack::Metadata::FOLDER
       old_rubygems_version    = nil
       ruby_version_cache      = "ruby_version"
       buildpack_version_cache = "buildpack_version"

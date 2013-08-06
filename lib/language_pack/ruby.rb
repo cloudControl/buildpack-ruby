@@ -11,6 +11,9 @@ class LanguagePack::Ruby < LanguagePack::Base
   include LanguagePack::BundlerLockfile
   extend LanguagePack::BundlerLockfile::ClassMethods
 
+    NAME = "ruby"
+    BUILDPACK_VERSION = "v77"
+    DEFAULT_RUBY_VERSION = "ruby-2.0.0"
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
   def self.use?
@@ -29,8 +32,8 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   def initialize(build_path, cache_path=nil)
     super(build_path, cache_path)
-    @fetchers[:jvm] = LanguagePack::Fetcher.new(JVM_BASE_URL)
-    @fetchers[:rbx] = LanguagePack::Fetcher.new(RBX_BASE_URL)
+    @fetchers[:jvm] = LanguagePack::Fetcher.new(Configs::JVM_BASE_URL)
+    @fetchers[:rbx] = LanguagePack::Fetcher.new(Configs::RBX_BASE_URL)
   end
 
   def name
@@ -443,7 +446,7 @@ WARNING
     instrument 'ruby.install_libyaml' do
       FileUtils.mkdir_p dir
       Dir.chdir(dir) do |dir|
-        @fetchers[:buildpack].fetch_untar("#{LIBYAML_PATH}.tgz")
+        @fetchers[:buildpack].fetch_untar("#{Configs::LIBYAML_PATH}.tgz")
       end
     end
   end
@@ -502,14 +505,14 @@ WARNING
 
         bundler_output = ""
         Dir.mktmpdir("libyaml-") do |tmpdir|
-          libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
+          libyaml_dir = "#{tmpdir}/#{Configs::LIBYAML_PATH}"
           install_libyaml(libyaml_dir)
 
           # need to setup compile environment for the psych gem
           yaml_include   = File.expand_path("#{libyaml_dir}/include")
           yaml_lib       = File.expand_path("#{libyaml_dir}/lib")
           pwd            = run("pwd").chomp
-          bundler_path   = "#{pwd}/#{slug_vendor_base}/gems/#{BUNDLER_GEM_PATH}/lib"
+          bundler_path   = "#{pwd}/#{slug_vendor_base}/gems/#{Configs::BUNDLER_GEM_PATH}/lib"
           # we need to set BUNDLE_CONFIG and BUNDLE_GEMFILE for
           # codon since it uses bundler.
           env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:$CPATH CPPATH=#{yaml_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\" NOKOGIRI_USE_SYSTEM_LIBRARIES=true"
@@ -628,10 +631,10 @@ ERROR
 
       full_ruby_version       = run_stdout(%q(ruby -v)).chomp
       rubygems_version        = run_stdout(%q(gem -v)).chomp
-      paas_vendor_metadata    = "vendor/paas_vendor"
+      paas_vendor_metadata    = "vendor/heroku"
       old_rubygems_version    = nil
-      ruby_version_cache      = "#{paas_vendor_metadata}/ruby_version"
-      buildpack_version_cache = "#{paas_vendor_metadata}/buildpack_version"
+      ruby_version_cache      = "ruby_version"
+      buildpack_version_cache = "buildpack_version"
       bundler_version_cache   = "bundler_version"
       rubygems_version_cache  = "rubygems_version"
 
@@ -672,7 +675,7 @@ ERROR
       FileUtils.mkdir_p(paas_vendor_metadata)
       @metadata.write(ruby_version_cache, full_ruby_version, false)
       @metadata.write(buildpack_version_cache, BUILDPACK_VERSION, false)
-      @metadata.write(bundler_version_cache, BUNDLER_VERSION, false)
+      @metadata.write(bundler_version_cache, Configs::BUNDLER_VERSION, false)
       @metadata.write(rubygems_version_cache, rubygems_version, false)
       @metadata.save
     end

@@ -18,6 +18,7 @@ module Configs
   BUNDLER_GEM_PATH    = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION        = "0.4.7"
   NODE_JS_BINARY_PATH = "node-#{NODE_VERSION}"
+  RBX_BASE_URL        = "http://binaries.rubini.us/heroku"
 
   # vendor specific constants
   if paas_vendor == :heroku

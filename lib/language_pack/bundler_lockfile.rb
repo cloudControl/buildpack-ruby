@@ -1,6 +1,8 @@
 require 'fileutils'
 require 'language_pack/ruby'
 require 'language_pack/fetcher'
+require_relative "../../configs"
+
 
 module LanguagePack
   module BundlerLockfile
@@ -19,16 +21,16 @@ module LanguagePack
       end
 
       def vendor_dir
-        @vendor_dir ||= File.expand_path("../../../tmp/#{LanguagePack::Ruby::BUNDLER_GEM_PATH}", __FILE__)
+        @vendor_dir ||= File.expand_path("../../../tmp/#{Configs::BUNDLER_GEM_PATH}", __FILE__)
       end
 
       def fetch_bundler
         instrument 'fetch_bundler' do
           unless Dir.exists?(vendor_dir)
             FileUtils.mkdir_p(vendor_dir)
-            fetcher = LanguagePack::Fetcher.new(LanguagePack::Base::VENDOR_URL)
+            fetcher = LanguagePack::Fetcher.new(Configs::VENDOR_URL)
             Dir.chdir(vendor_dir) do
-              fetcher.fetch_untar("#{LanguagePack::Ruby::BUNDLER_GEM_PATH}.tgz")
+              fetcher.fetch_untar("#{Configs::BUNDLER_GEM_PATH}.tgz")
             end
           end
         end
@@ -38,7 +40,7 @@ module LanguagePack
 
       def parse_bundle
         instrument 'parse_bundle' do
-          $: << "#{bundler_path}/gems/bundler-#{LanguagePack::Ruby::BUNDLER_VERSION}/lib"
+          $: << "#{bundler_path}/gems/bundler-#{Configs::BUNDLER_VERSION}/lib"
           require "bundler"
           Bundler::LockfileParser.new(File.read("Gemfile.lock"))
         end

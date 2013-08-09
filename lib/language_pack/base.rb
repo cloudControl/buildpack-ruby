@@ -83,6 +83,7 @@ class LanguagePack::Base
       setup_language_pack_environment
 
       {
+        "config_vars" => default_config_vars,
         "default_process_types" => default_process_types
       }.to_yaml
     end

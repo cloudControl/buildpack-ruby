@@ -160,17 +160,6 @@ private
     @ruby_version
   end
 
-  # bootstraps bundler so we can pull the ruby version
-  def bootstrap_bundler(&block)
-    Dir.mktmpdir("bundler-") do |tmpdir|
-      Dir.chdir(tmpdir) do
-        run("curl #{Configs::VENDOR_URL}/#{Configs::BUNDLER_GEM_PATH}.tgz -s -o - | tar xzf -")
-      end
-
-      yield tmpdir
-    end
-  end
-
   # determine if we're using rbx
   # @return [Boolean] true if we are and false if we aren't
   def ruby_version_rbx?

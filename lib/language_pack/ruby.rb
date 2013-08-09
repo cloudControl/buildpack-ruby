@@ -14,7 +14,7 @@ class LanguagePack::Ruby < LanguagePack::Base
 
     NAME = "ruby"
     BUILDPACK_VERSION = "v77"
-    DEFAULT_RUBY_VERSION = "ruby-2.0.0"
+    DEFAULT_RUBY_VERSION = "ruby-1.9.3"
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
   def self.use?

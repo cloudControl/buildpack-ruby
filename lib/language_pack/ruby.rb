@@ -12,9 +12,6 @@ class LanguagePack::Ruby < LanguagePack::Base
   include LanguagePack::BundlerLockfile
   extend LanguagePack::BundlerLockfile::ClassMethods
 
-    NAME = "ruby"
-    BUILDPACK_VERSION = "v77"
-    DEFAULT_RUBY_VERSION = "ruby-1.9.3"
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
   def self.use?
@@ -145,7 +142,7 @@ private
         @ruby_version_env_var = true
       elsif @ruby_version == "No ruby version specified"
         if new_app?
-          @ruby_version = DEFAULT_RUBY_VERSION
+          @ruby_version = Configs::DEFAULT_RUBY_VERSION
         elsif !@metadata.exists?("buildpack_ruby_version")
           @ruby_version = "ruby-1.9.2"
         else
@@ -664,7 +661,7 @@ ERROR
       purge_bundler_cache if @metadata.exists?(buildpack_version_cache) && @metadata.read(buildpack_version_cache).sub('v', '').to_i <= 76
       FileUtils.mkdir_p(paas_vendor_metadata)
       @metadata.write(ruby_version_cache, full_ruby_version, false)
-      @metadata.write(buildpack_version_cache, BUILDPACK_VERSION, false)
+      @metadata.write(buildpack_version_cache, Configs::BUILDPACK_VERSION, false)
       @metadata.write(bundler_version_cache, Configs::BUNDLER_VERSION, false)
       @metadata.write(rubygems_version_cache, rubygems_version, false)
       @metadata.save

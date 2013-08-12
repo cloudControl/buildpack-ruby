@@ -1,6 +1,10 @@
 # container for all constants including vendor-specific ones
 module Configs
 
+  NAME = "ruby"
+  BUILDPACK_VERSION = "v77"
+  DEFAULT_RUBY_VERSION = "ruby-1.9.3"
+
   PAAS_VENDOR_FOLDER  = "vendor/cloudcontrol"
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"

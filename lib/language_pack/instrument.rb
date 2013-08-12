@@ -3,6 +3,7 @@ require 'stringio'
 require 'lpxc'
 require 'date'
 require 'language_pack/ruby'
+require_relative "../../configs"
 
 module LanguagePack
   module Instrument
@@ -60,11 +61,11 @@ module LanguagePack
     end
 
     def self.buildpack_version
-      LanguagePack::Ruby::BUILDPACK_VERSION
+      Configs::BUILDPACK_VERSION
     end
 
     def self.buildpack_name
-      LanguagePack::Ruby::NAME
+      Configs::NAME
     end
   end
 end

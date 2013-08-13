@@ -304,14 +304,12 @@ ERROR_MSG
 You have not declared a Ruby version in your Gemfile.
 To set your Ruby version add this line to your Gemfile:
 #{ruby_version_to_gemfile}
-# See https://devcenter.heroku.com/articles/ruby-versions for more information."
 WARNING
         end
       else
         warn(<<WARNING)
 Using RUBY_VERSION: #{ruby_version}
-RUBY_VERSION support has been deprecated and will be removed entirely on August 1, 2012.
-See https://devcenter.heroku.com/articles/ruby-versions#selecting_a_version_of_ruby for more information.
+RUBY_VERSION is not supported.
 WARNING
       end
     end
@@ -529,8 +527,8 @@ WARNING
             error_message += <<ERROR
 
 
-Detected sqlite3 gem which is not supported on Heroku.
-https://devcenter.heroku.com/articles/sqlite3
+Detected sqlite3 gem which is not supported.
+You might want to use another database on production.
 ERROR
           end
 

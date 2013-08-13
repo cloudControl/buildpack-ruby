@@ -14,7 +14,7 @@ class Lpxc
   #:default_token => nil:: You can specify a token that will be used for any call to Lpxc#puts that doesn't include a token.
   #:structured_data => '-':: Structured-data field for syslog headers. Ignored by logplex.
   #:msgid => '-'::  Msg ID field for syslog headers. Ignored by logplex.
-  #:procid => 'lpxc':: Proc ID field for syslog headers. This will show up in the Heroku logs tail command as: app [lpxc].
+  #:procid => 'lpxc':: Proc ID field for syslog headers. This will show up in the logs tail command as: app [lpxc].
   #:hostname => 'myhost':: Hostname field for syslog headers. Ignored by logplex.
   #:max_reqs_per_conn => 1_000:: Number of requests before we re-establish our keep-alive connection to logplex.
   #:conn_timeout => 2:: Number of seconds before timing out a sindle request to logplex.

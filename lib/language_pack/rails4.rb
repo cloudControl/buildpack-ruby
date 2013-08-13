@@ -49,8 +49,7 @@ class LanguagePack::Rails4 < LanguagePack::Rails3
     instrument "rails4.check_for_rails_gems" do
       if rails_gems.any? {|gem| !gem_is_bundled?(gem) }
         warn(<<WARNING)
-Include "rails_12factor" gem to enable all platform features
-See https://devcenter.heroku.com/articles/rails-integration-gems for more information.
+Include "rails_12factor" gem to enable all platform features.
 WARNING
       end
     end

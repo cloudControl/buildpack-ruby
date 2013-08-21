@@ -3,7 +3,7 @@ module Configs
 
   NAME = "ruby"
   BUILDPACK_VERSION = "v77"
-  DEFAULT_RUBY_VERSION = "ruby-1.9.3"
+  DEFAULT_RUBY_VERSION = "ruby-2.0.0"
 
   PAAS_VENDOR_FOLDER  = "vendor/cloudcontrol"
   LIBYAML_VERSION     = "0.1.4"

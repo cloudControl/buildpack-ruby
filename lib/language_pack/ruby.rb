@@ -87,7 +87,8 @@ private
   # the base PATH environment variable to be used
   # @return [String] the resulting PATH
   def default_path
-    "bin:#{bundler_binstubs_path}:/usr/local/bin:/usr/bin:/bin"
+    absolute_paths = "/app/bin:/app/#{bundler_binstubs_path}"
+    "#{absolute_paths}:/usr/local/bin:/usr/bin:/bin"
   end
 
   # the relative path to the bundler directory of gems

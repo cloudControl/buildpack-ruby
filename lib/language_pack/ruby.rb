@@ -76,6 +76,7 @@ class LanguagePack::Ruby < LanguagePack::Base
         install_language_pack_gems
         build_bundler
         install_binaries
+        try_symlinking_bundler
         run_assets_precompile_rake_task
       end
       super
@@ -674,5 +675,11 @@ ERROR
       # need to reinstall language pack gems
       install_language_pack_gems
     end
+  end
+
+  def try_symlinking_bundler
+    numeric_version = ruby_version[/\d\.\d\.\d/]
+    run("ln -s ../vendor/bundle/ruby/#{numeric_version}/bin/bundle bin")
+  rescue
   end
 end

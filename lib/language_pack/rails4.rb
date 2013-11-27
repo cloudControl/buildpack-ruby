@@ -96,7 +96,9 @@ WARNING
             end
           end
         else
-          puts "Error detecting the assets:precompile task"
+          indentation = ".#{' ' * 4}"
+          task_output = %x{ env PATH=$PATH bundle exec rake assets:precompile --dry-run 2>&1 }.strip.gsub "\n", "\n#{indentation}"
+          puts "Error detecting the assets:precompile task. More details:\n#{indentation}#{task_output}"
         end
       end
     end

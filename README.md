@@ -77,7 +77,7 @@ For more information related to Rails on cloudControl visit our [rails guide](ht
 Choose your Ruby version
 ------------------
 
-cloudControl provides Ruby 1.9.3 as default version. Anyway you can choose the version you want just adding one line to your `Gemfile`:
+cloudControl provides Ruby 2.0.0 as default version. Anyway you can choose the version you want just adding one line to your `Gemfile`:
 
 
 ```ruby
@@ -102,12 +102,13 @@ ruby '1.9.3', engine: 'rbx', engine_version: '2.0.0.m8'
 
 List of supported versions:
 
-* ruby-2.0.0
-* ruby-1.9.3
-* ruby-1.9.2
-* ruby-1.8.7
-* ruby-1.9.3-jruby-1.7.4
-* ruby-1.8.7-jruby-1.7.4
-* ruby-2.0.0-rbx-2.0.0.m8
-* ruby-1.9.3-rbx-2.0.0.m8
-* ruby-1.8.7-rbx-2.0.0.m8
+- ruby-2.0.0
+- ruby-2.1.0
+- ruby-1.9.3
+- ruby-1.9.2
+- ruby-1.8.7
+- ruby-1.9.3-jruby-1.7.4
+- ruby-1.8.7-jruby-1.7.4
+- ruby-2.0.0-rbx-2.0.0.m8
+- ruby-1.9.3-rbx-2.0.0.m8
+- ruby-1.8.7-rbx-2.0.0.m8

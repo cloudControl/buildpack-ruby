@@ -11,15 +11,15 @@ module LanguagePack
     end
 
     def fetch(path)
-      run("curl -O #{@host_url}/#{path}")
+      run("curl -O -L #{@host_url}/#{path}")
     end
 
     def fetch_untar(path)
-      run("curl #{@host_url}/#{path} -s -o - | tar zxf -")
+      run("curl #{@host_url}/#{path} -s -L | tar zx")
     end
 
     def fetch_bunzip2(path)
-      run("curl #{@host_url}/#{path} -s -o - | tar jxf -")
+      run("curl #{@host_url}/#{path} -s -L | tar jx")
     end
 
     private

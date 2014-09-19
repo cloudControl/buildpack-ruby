@@ -14,11 +14,10 @@ module Configs
   NODE_JS_BINARY_PATH = "node-#{NODE_VERSION}"
   RBX_BASE_URL        = "http://binaries.rubini.us/heroku"
 
-  S3_BASE        = "https://s3-eu-west-1.amazonaws.com"
-  S3_BUCKET_NAME = "#{ ENV["DOMAIN"] }.packages"
-  S3_RUBY_DIR    = "buildpack-ruby"
-  S3_JAVA_DIR    = "buildpack-java"
+  BUCKET_NAME = "https://packages.#{ ENV["DOMAIN"] }"
+  RUBY_DIR    = "buildpack-ruby"
+  JAVA_DIR    = "buildpack-java"
   JVM_VERSION    = "openjdk7"
-  VENDOR_URL     = "#{S3_BASE}/#{S3_BUCKET_NAME}/#{S3_RUBY_DIR}"
-  JVM_BASE_URL   = "#{S3_BASE}/#{S3_BUCKET_NAME}/#{S3_JAVA_DIR}"
+  VENDOR_URL     = "#{BUCKET_NAME}/#{RUBY_DIR}"
+  JVM_BASE_URL   = "#{BUCKET_NAME}/#{JAVA_DIR}"
 end

@@ -8,7 +8,7 @@ module Configs
   PAAS_VENDOR_FOLDER  = "vendor/cloudcontrol"
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
-  BUNDLER_VERSION     = "1.3.2"
+  BUNDLER_VERSION     = "1.6.3"
   BUNDLER_GEM_PATH    = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION        = "0.4.7"
   NODE_JS_BINARY_PATH = "node-#{NODE_VERSION}"

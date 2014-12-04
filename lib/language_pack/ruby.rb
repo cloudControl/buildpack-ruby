@@ -1,6 +1,7 @@
 require "tmpdir"
 require "digest/md5"
 require "rubygems"
+require "benchmark"
 require "language_pack"
 require "language_pack/base"
 require "language_pack/bundler_lockfile"
@@ -439,7 +440,9 @@ WARNING
 
         load_bundler_cache
 
+        bundle_time = nil
         bundler_output = ""
+
         Dir.mktmpdir("libyaml-") do |tmpdir|
           libyaml_dir = "#{tmpdir}/#{Configs::LIBYAML_PATH}"
           install_libyaml(libyaml_dir)
@@ -455,11 +458,14 @@ WARNING
           env_vars      += " BUNDLER_LIB_PATH=#{bundler_path}" if ruby_version.ruby_version == "1.8.7"
           puts "Running: #{bundle_command}"
           instrument "ruby.bundle_install" do
-            bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
+            bundle_time = Benchmark.realtime do
+              bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
+            end
           end
         end
 
         if $?.success?
+          puts "Bundle completed (#{"%.2f" % bundle_time}s)"
           log "bundle", :status => "success"
           puts "Cleaning up the bundler cache."
           instrument "ruby.bundle_clean" do
@@ -546,8 +552,6 @@ ERROR
   def run_assets_precompile_rake_task
     instrument 'ruby.run_assets_precompile_rake_task' do
       if rake_task_defined?("assets:precompile")
-        require 'benchmark'
-
         topic "Running: rake assets:precompile"
         time = Benchmark.realtime { pipe("env PATH=$PATH:bin bundle exec rake assets:precompile 2>&1") }
         if $?.success?

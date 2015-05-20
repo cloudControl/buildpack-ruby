@@ -1,7 +1,6 @@
 require "fileutils"
 require "language_pack"
 require "language_pack/rack"
-require_relative "../../configs"
 
 # Rails 2 Language Pack. This is for any Rails 2.x apps.
 class LanguagePack::Rails2 < LanguagePack::Ruby
@@ -83,8 +82,14 @@ private
     puts "Injecting #{name}"
     FileUtils.mkdir_p plugin_dir
     Dir.chdir(plugin_dir) do |dir|
-      run("curl #{Configs::VENDOR_URL}/#{name}.tgz -s -L | tar xz")
+      run("curl #{VENDOR_URL}/#{name}.tgz -s -o - | tar xzf -")
     end
+  end
+
+  # most rails apps need a database
+  # @return [Array] shared database addon
+  def add_dev_database_addon
+    ['heroku-postgresql:dev']
   end
 
   # sets up the profile.d script for this buildpack

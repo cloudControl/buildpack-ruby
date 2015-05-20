@@ -1,9 +1,8 @@
 require "language_pack"
 require "language_pack/base"
-require_relative '../../configs'
 
 class LanguagePack::Metadata
-  FOLDER = Configs::PAAS_VENDOR_FOLDER
+  FOLDER = "vendor/heroku"
 
   def initialize(cache)
     if cache

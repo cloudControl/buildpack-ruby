@@ -7,7 +7,6 @@ require "language_pack/cache"
 require "language_pack/metadata"
 require "language_pack/fetcher"
 require "language_pack/instrument"
-require_relative "../../configs"
 
 Encoding.default_external = Encoding::UTF_8 if defined?(Encoding)
 
@@ -15,7 +14,9 @@ Encoding.default_external = Encoding::UTF_8 if defined?(Encoding)
 class LanguagePack::Base
   include LanguagePack::ShellHelpers
 
-   attr_reader :build_path, :cache
+  VENDOR_URL = "https://s3.amazonaws.com/heroku-buildpack-ruby"
+
+  attr_reader :build_path, :cache
 
   # changes directory to the build_path
   # @param [String] the path of the build dir
@@ -27,7 +28,7 @@ class LanguagePack::Base
       @metadata   = LanguagePack::Metadata.new(@cache)
       @id         = Digest::SHA1.hexdigest("#{Time.now.to_f}-#{rand(1000000)}")[0..10]
       @warnings   = []
-      @fetchers   = {:buildpack => LanguagePack::Fetcher.new(Configs::VENDOR_URL) }
+      @fetchers   = {:buildpack => LanguagePack::Fetcher.new(VENDOR_URL) }
 
       Dir.chdir build_path
     end
@@ -51,6 +52,10 @@ class LanguagePack::Base
     raise "must subclass"
   end
 
+  # list of default addons to install
+  def default_addons
+    raise "must subclass"
+  end
 
   # config vars to be set on first push.
   # @return [Hash] the result
@@ -83,7 +88,7 @@ class LanguagePack::Base
       setup_language_pack_environment
 
       {
-        "config_vars" => default_config_vars,
+        "addons" => default_addons,
         "default_process_types" => default_process_types
       }.to_yaml
     end

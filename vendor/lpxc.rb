@@ -8,7 +8,7 @@ class Lpxc
 
   #After parsing opts and initializing defaults, the initializer
   #will start 2 threads. One thread for sending HTTP requests and another
-  #thread for flusing log messages to the outlet thread periodically.
+  #thread for flushing log messages to the outlet thread periodically.
   #:hash => {}:: A data structure for grouping log messages by token.
   #:request_queue => SizedQueue.new::  Contains HTTP requests ready for outlet thread to deliver to logplex.
   #:default_token => nil:: You can specify a token that will be used for any call to Lpxc#puts that doesn't include a token.
@@ -21,9 +21,10 @@ class Lpxc
   #:batch_size => 300:: Max number of log messages inside single HTTP request.
   #:flush_interval => 0.5:: Fractional number of seconds before flushing all log messages in buffer to logplex.
   #:logplex_url => \'https://east.logplex.io/logs':: HTTP server that will accept our log messages.
+  #:disable_delay_flush => nil:: Force flush only batch_size is reached.
   def initialize(opts={})
     @hash_lock = Mutex.new
-    @hash = opts[:hash] || Hash.new
+    @hash              = opts[:hash]              || Hash.new
     @request_queue     = opts[:request_queue]     || SizedQueue.new(1)
     @default_token     = opts[:default_token]     || ENV['LOGPLEX_DEFAULT_TOKEN']
     @structured_data   = opts[:structured_data]   || "-"
@@ -46,7 +47,7 @@ class Lpxc
 
     #Start the processing threads.
     Thread.new {outlet}
-    Thread.new {delay_flush}
+    Thread.new {delay_flush} if opts[:disable_delay_flush].nil?
   end
 
   #The interface to publish logs into the stream.
@@ -168,7 +169,7 @@ class Lpxc
         end
       rescue => e
       ensure
-        http.finish
+        http.finish if http.started?
       end
     end
   end

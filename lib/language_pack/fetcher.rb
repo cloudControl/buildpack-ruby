@@ -3,33 +3,52 @@ require "language_pack/shell_helpers"
 
 module LanguagePack
   class Fetcher
-    include ShellHelpers
+    class FetchError < StandardError; end
 
-    def initialize(host_url)
+    include ShellHelpers
+    CDN_YAML_FILE = File.expand_path("../../../config/cdn.yml", __FILE__)
+
+    def initialize(host_url, stack = nil)
       @config   = load_config
       @host_url = fetch_cdn(host_url)
+      @host_url += File.basename(stack) if stack
     end
 
     def fetch(path)
-      run("curl -O #{@host_url}/#{path}")
+      curl = curl_command("-O #{@host_url.join(path)}")
+      run!(curl, error_class: FetchError)
     end
 
-    def fetch_untar(path)
-      run("curl #{@host_url}/#{path} -s -o - | tar zxf -")
+    def fetch_untar(path, files_to_extract = nil)
+      curl = curl_command("#{@host_url.join(path)} -s -o")
+      run!("#{curl} - | tar zxf - #{files_to_extract}", error_class: FetchError)
     end
 
-    def fetch_bunzip2(path)
-      run("curl #{@host_url}/#{path} -s -o - | tar jxf -")
+    def fetch_bunzip2(path, files_to_extract = nil)
+      curl = curl_command("#{@host_url.join(path)} -s -o")
+      run!("#{curl} - | tar jxf - #{files_to_extract}", error_class: FetchError)
     end
 
     private
+    def curl_command(command)
+      "set -o pipefail; curl --fail --retry 3 --retry-delay 1 --connect-timeout #{curl_connect_timeout_in_seconds} --max-time #{curl_timeout_in_seconds} #{command}"
+    end
+
+    def curl_timeout_in_seconds
+      ENV['CURL_TIMEOUT'] || 30
+    end
+
+    def curl_connect_timeout_in_seconds
+      ENV['CURL_CONNECT_TIMEOUT'] || 3
+    end
+
     def load_config
-      YAML.load_file(File.expand_path("../../../config/cdn.yml", __FILE__))
+      YAML.load_file(CDN_YAML_FILE) || {}
     end
 
     def fetch_cdn(url)
-      cdn = @config[url]
-      cdn.nil? ? url : cdn
+      url = @config[url] || url
+      Pathname.new(url)
     end
   end
 end

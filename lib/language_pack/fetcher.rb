@@ -11,7 +11,6 @@ module LanguagePack
     def initialize(host_url, stack = nil)
       @config   = load_config
       @host_url = fetch_cdn(host_url)
-      @host_url += File.basename(stack) if stack
     end
 
     def fetch(path)
@@ -31,7 +30,7 @@ module LanguagePack
 
     private
     def curl_command(command)
-      "set -o pipefail; curl --fail --retry 3 --retry-delay 1 --connect-timeout #{curl_connect_timeout_in_seconds} --max-time #{curl_timeout_in_seconds} #{command}"
+      "set -o pipefail; curl --location --fail --retry 3 --retry-delay 1 --connect-timeout #{curl_connect_timeout_in_seconds} --max-time #{curl_timeout_in_seconds} #{command}"
     end
 
     def curl_timeout_in_seconds

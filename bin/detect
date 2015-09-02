@@ -1,15 +1,9 @@
-#!/usr/bin/env ruby
+#!/bin/sh
 
-$:.unshift File.expand_path("../../lib", __FILE__)
-require "language_pack"
-
-LanguagePack::Instrument.trace 'detect', 'app.detect' do
-  if pack = LanguagePack.detect(ARGV.first)
-    puts pack.name
-    exit 0
-  else
-    puts "no"
-    exit 1
-  end
-end
-
+if [ -f "$1/Gemfile" ]; then
+  echo "Ruby"
+  exit 0
+else
+  echo "no"
+  exit 1
+fi

@@ -1,9 +1,8 @@
 require "language_pack"
 require "language_pack/base"
-require_relative '../../configs'
 
 class LanguagePack::Metadata
-  FOLDER = Configs::PAAS_VENDOR_FOLDER
+  FOLDER = "vendor/heroku"
 
   def initialize(cache)
     if cache
@@ -16,7 +15,7 @@ class LanguagePack::Metadata
     full_key = "#{FOLDER}/#{key}"
     File.read(full_key) if exists?(key)
   end
-  
+
   def exists?(key)
     full_key = "#{FOLDER}/#{key}"
     File.exists?(full_key) && !Dir.exists?(full_key)
@@ -31,6 +30,6 @@ class LanguagePack::Metadata
   end
 
   def save
-    @cache ? @cache.store(FOLDER) : false
+    @cache ? @cache.add(FOLDER) : false
   end
 end

@@ -106,7 +106,6 @@ class LanguagePack::Base
 
     unless File.exist?("Procfile")
       msg =  "No Procfile detected, using the default web server (webrick)\n"
-      msg << "https://devcenter.heroku.com/articles/ruby-default-web-server"
       warn msg
     end
   end

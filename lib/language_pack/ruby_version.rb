@@ -7,7 +7,8 @@ module LanguagePack
         msg = ""
         msg << output
         msg << "Can not parse Ruby Version:\n"
-        msg << "Valid versions listed on: https://devcenter.heroku.com/articles/ruby-support\n"
+        msg << "Valid versions listed on: https://packages.#{ENV['DOMAIN']}/buildpack-ruby/ruby_versions.yml\n"
+        msg << "Please contact support@cloudcontrol.de if you miss a version"
         super msg
       end
     end

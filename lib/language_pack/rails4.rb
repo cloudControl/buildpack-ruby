@@ -52,7 +52,7 @@ class LanguagePack::Rails4 < LanguagePack::Rails3
 
     warn <<-WARNING
 Include 'rails_12factor' gem to enable all platform features
-See https://devcenter.heroku.com/articles/rails-integration-gems for more information.
+See https://github.com/heroku/rails_12factor
 WARNING
     # do not install plugins, do not call super
     end

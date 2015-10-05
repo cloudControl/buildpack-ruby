@@ -50,6 +50,15 @@ class LanguagePack::Rails2 < LanguagePack::Ruby
     end
   end
 
+  def best_practice_warnings
+    if env("RAILS_ENV") != "production"
+      warn(<<-WARNING)
+You are deploying to a non-production environment: #{ env("RAILS_ENV").inspect }.
+WARNING
+    end
+    super
+  end
+
 private
 
   def install_plugins
